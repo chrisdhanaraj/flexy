@@ -26,6 +26,7 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
   overflow: hidden;
   position: absolute;
   padding: 10px;
+  transition: transform 1s ease;
 }
 
 picture > * {

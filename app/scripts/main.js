@@ -31,6 +31,7 @@
 			var newSize = getRowSize();
 			if (newSize !== rowSize) {
 				rowSize = newSize;
+				console.log(rowSize);
 				internalGrid = initGrid(rowSize);
 				flexyGrid = [];
 				init();
@@ -39,6 +40,7 @@
 
 		function init() {
 			_.forEach(elOnPage, function(item) {
+				console.log(internalGrid);
 				flexyGrid.push(addItem(gridElement(item)));
 			});
 
@@ -53,6 +55,11 @@
 
 			var width = Number(item.col);
 			var height = Number(item.row);
+
+			if (rowSize === 1) {
+				width = 1;
+			}
+
 			var coord = positionTest(item);
 
 			item.colPos = coord.colPos;
@@ -62,6 +69,10 @@
 				// how wide
 				for (var jj = 0; jj < height; jj++) {
 					// how tall
+					console.log('ii: ', ii);
+					console.log('jj: ', jj);
+					console.log('item.colPos: ', item.colPos);
+					console.log('item.rowNum: ', item.rowNum);
 					internalGrid[jj + item.rowNum][ii + item.colPos] = 1;
 				}
 			}
@@ -72,6 +83,10 @@
 		function positionTest(item) {
 			var width = Number(item.col);
 			var height = Number(item.row);
+
+			if (rowSize === 1) {
+				width = 1;
+			}
 
 			var col = 0;
 			var rowNum = 0;
@@ -114,8 +129,13 @@
 			var y = item.rowNum * config.height;
 			
 			$el.css('transform', 'translate(' + x + 'px, ' + y + 'px');
-			$el.css('width', config.width * item.col);
 			$el.css('height', config.height * item.row);
+			if (rowSize !== 1) {
+				$el.css('width', config.width * item.col);	
+			} else {
+				$el.css('width', '100%');
+			}
+			
 		}
 
 		function initGrid(rsize) {
