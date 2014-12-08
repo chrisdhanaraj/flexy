@@ -14,13 +14,13 @@
 		var flexyGrid = [];
 		var rowSize = getRowSize();
 		var elOnPage = element.querySelectorAll('.flexy__box--js');
- 		var internalGrid = initGrid(rowSize);
-		init();
+   var internalGrid = initGrid(rowSize);
+   init();
 
-		var resize = _.debounce(calculateLayout, 150);
-		$(window).on('resize', resize);
+   var resize = _.debounce(calculateLayout, 150);
+   $(window).on('resize', resize);
 
-		return flexyGrid;
+   return flexyGrid;
 
 		// ----------------
 		// Functions
@@ -129,16 +129,16 @@
 			var y = item.rowNum * config.height;
 			
 			$el.css('transform', 'translate(' + x + 'px, ' + y + 'px');
-			$el.css('height', config.height * item.row);
-			if (rowSize !== 1) {
-				$el.css('width', config.width * item.col);	
-			} else {
-				$el.css('width', '100%');
-			}
-			
-		}
+       $el.css('height', config.height * item.row);
+       if (rowSize !== 1) {
+        $el.css('width', config.width * item.col);	
+      } else {
+        $el.css('width', '100%');
+      }
+      
+    }
 
-		function initGrid(rsize) {
+    function initGrid(rsize) {
 			// create a bunch of rows based on rsize
 			// the intent is to never really hit this max size
 			var arr = [];
@@ -155,18 +155,18 @@
 
 		function getRowSize(){
 			var rowSize = Math.floor(element.offsetWidth / (config.width));
-            if (rowSize === 0) {
-                rowSize = 1;
-            }
-            if (rowSize >= 4) {
-                rowSize = 4;
-            }
+      if (rowSize === 0) {
+        rowSize = 1;
+      }
+      if (rowSize >= 4) {
+        rowSize = 4;
+      }
 
-            return rowSize;
-		}
-	}
+      return rowSize;
+    }
+  }
 
-	function gridElement(el) {
+  function gridElement(el) {
 		// define amount of space and priority
 		// return gridelements and properties
 
