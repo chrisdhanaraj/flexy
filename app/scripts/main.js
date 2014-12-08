@@ -41,16 +41,12 @@
         // ----------------
 
         /**
-         * What does this function do?
-         * What does it return?
+         *  Checks the row size on window resize
+         *  If changed, resets the internal grid 
+         *  and starts the init function
          */
-
         function calculateLayout() {
-            /**
-             *  Checks the row size on window resize
-             *  If changed, resets the internal grid 
-             *  and starts the init function
-             */
+            
 
             var newSize = getRowSize();
             if (newSize !== rowSize) {
@@ -61,14 +57,15 @@
             }
         }
 
+        /**
+         *  Initialization function - gets all the gridElments on the page,
+         *  makes them into gridElements, pushes them into the flexy container,
+         *  and sets the css.
+         *  
+         *  Also sorts the grid by priority if rowSize is below than 4
+         */
         function init() {
-            /**
-             *  Initialization function - gets all the gridElments on the page,
-             *  makes them into gridElements, pushes them into the flexy container,
-             *  and sets the css.
-             *  
-             *  Also sorts the grid by priority if rowSize is below than 4
-             */
+            
 
             if (rowSize < 4) {
                 elOnPage = _.sortBy(elOnPage, function(el) {
@@ -86,14 +83,15 @@
             });
         }
 
+        /**
+         *  Sets internal grid to occupied (in x,y positions) and gives the 
+         *  gridElement it's start row number and column number
+         * 
+         *  @param: gridElement
+         *  @return: gridElement
+         */
         function addItem(item) {
-            /**
-             *  Sets internal grid to occupied (in x,y positions) and gives the 
-             *  gridElement it's start row number and column number
-             * 
-             *  @param: gridElement
-             *  @return: gridElement
-             */
+            
 
             var width = Number(item.col);
             var height = Number(item.row);
@@ -118,13 +116,14 @@
             return item;
         }
 
+        /**
+         *  Loops through the internal grid to find unoccupied spaces
+         * 
+         *  @param: gridElement
+         *  @return: obj containing start row number and column number
+         */
         function getPosition(item) {
-            /**
-             *  Loops through the internal grid to find unoccupied spaces
-             * 
-             *  @param: gridElement
-             *  @return: obj containing start row number and column number
-             */
+            
             var width = Number(item.col);
             var height = Number(item.row);
 
@@ -168,13 +167,12 @@
             };
         }
 
+        /**
+         *  Adds the css to move the element to grid position
+         *
+         *  @param: gridElement
+         */
         function moveItem(item) {
-            /**
-             *  Adds the css to move the element to grid position
-             *
-             *  @param: gridElement
-             */
-
             var $el = $(item.el);
             var x = item.colPos * CONFIG.width;
             var y = item.rowNum * CONFIG.height;
@@ -189,13 +187,14 @@
 
         }
 
+        /**
+         *  Initializes a bunch of empty rows to be filled in
+         *
+         *  @param: rowSize, i.e. number of columns in a row
+         *  @return: arr, two dimensional array of 0's
+         */
         function createEmptyGrid(rsize) {
-            /**
-             *  Initializes a bunch of empty rows to be filled in
-             *
-             *  @param: rowSize, i.e. number of columns in a row
-             *  @return: arr, two dimensional array of 0's
-             */
+            
             var arr = [];
             for (var i = 0; i < 20; i++) {
                 arr[i] = [];
@@ -208,12 +207,13 @@
             return arr;
         }
 
+        /**
+         *  Finds the number of columns that would fit in the parant div 
+         *  
+         *  @return: rowSize, i.e. number of columns in a row
+         */
         function getRowSize() {
-            /**
-             *  Finds the number of columns that would fit in the parant div 
-             *  
-             *  @return: rowSize, i.e. number of columns in a row
-             */
+            
 
             var rowSize = Math.floor(element.offsetWidth / (CONFIG.width));
             if (rowSize === 0) {
@@ -227,16 +227,17 @@
         }
     }
 
+    /**
+     *  Container for various properties for grid blocks
+     *  
+     *  @param: el, div blocks
+     *  @return: 
+     *    el: the div element
+     *    col: data-col
+     *    row: data-row
+     */
     function gridElement(el) {
-        /**
-         *  Container for various properties for grid blocks
-         *  
-         *  @param: el, div blocks
-         *  @return: 
-         *    el: the div element
-         *    col: data-col
-         *    row: data-row
-         */
+        
         console.log(el);
         var col = el.getAttribute('data-col');
         var row = el.getAttribute('data-row');
