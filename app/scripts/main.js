@@ -39,7 +39,6 @@
             var newSize = getRowSize();
             if (newSize !== rowSize) {
                 rowSize = newSize;
-                console.log(rowSize);
                 internalGrid = initGrid(rowSize);
                 flexyGrid = [];
                 init();
@@ -50,10 +49,17 @@
             // grab the the internal boxes
             // make them into a gridElement
             // add them to the gridArray container
+            console.log('Original: ', elOnPage);
+            if (rowSize < 4) {
+                elOnPage = _.sortBy(elOnPage, function(el) {
+                    return el.getAttribute('data-priority') === null ? 99 : el.getAttribute('data-priority');
+                });
+            }
+
             _.forEach(elOnPage, function(item) {
                 flexyGrid.push(addItem(gridElement(item)));
             });
-
+            
             // CSS the items
             _.forEach(flexyGrid, function(item) {
                 moveItem(item);
@@ -63,7 +69,7 @@
         function addItem(item) {
             // take item, compare to internal grid
             // fill up the internal grid to mark used spaces
-
+            console.log('%cStart', 'font-size: 18px; font-weight: 700');
             var width = Number(item.col);
             var height = Number(item.row);
 
@@ -78,11 +84,17 @@
             item.colPos = coord.colPos;
             item.rowNum = coord.rowNum;
 
+            console.log('width: ', width);
+            console.log('height: ', height);
             for (var ii = 0; ii < width; ii++) {
                 for (var jj = 0; jj < height; jj++) {
+                    console.log('ii: ', ii, 'cols: ', item.colPos);
+                    console.log('jj: ', jj, 'row: ', item.rowNum);
                     internalGrid[jj + item.rowNum][ii + item.colPos] = 1;
                 }
             }
+            var test = _.clone(internalGrid, true);
+            console.log(test);
 
             return item;
         }
@@ -101,12 +113,17 @@
             // looping through each row
             rowNum = _.findIndex(internalGrid, function(currentRow, currentRowNumber, matrix) {
                 // horizontal check
+                console.log('%cStart Check', 'font-size:14px; font-weight: 600)');
                 for (var currentCol = 0; currentCol < currentRow.length; currentCol++) {
                     if ((currentCol + width) > currentRow.length) {
+                        console.log('row too small');
                         break;
                     }
 
-                    if (_.findIndex(currentRow.slice(currentCol, width), 1) !== -1) {
+                    var sliced = currentRow.slice(currentCol + 1, currentCol + width);
+
+                    if (_.indexOf(sliced, 1) !== -1) {
+                        console.log('row is full');
                         // there's a 1 in there somewhere
                         break;
                     }
@@ -178,16 +195,14 @@
         // return gridelements and properties
 
         // check if it's a picture one
-        var $el = $(el);
-        var col = $el.data('col');
-        var row = $el.data('row');
-        var priority = $el.data('priority');
+        console.log(el);
+        var col = el.getAttribute('data-col');
+        var row = el.getAttribute('data-row');
 
         return {
             el: el,
             col: col,
-            row: row,
-            priority: priority
+            row: row
         };
     }
 
@@ -195,7 +210,9 @@
 
     _.forEach(gridsOnPage, function(item) {
         item = flexy(item);
+        console.log('flexy: ', item);
     });
+
 
 
 })(jQuery);
