@@ -29,42 +29,48 @@
       <div class="flexy">
 
         <article class="flexy__box flexy__box--js" data-col="1" data-row="2">
-          <picture>
-            <source media="(min-width: 600px)" srcset="images/mountain-desktop.jpg">
-            <img src="images/mountain-small.jpg" alt="mountains">
-          </picture>
-        </article>
-
-        <article class="flexy__box flexy__box--js" data-col="2" data-row="1">
-          <picture>
-            <source media="(min-width: 600px)" srcset="images/flower-desktop.jpg">
-            <img src="images/flower-small.jpg" alt="flowers">
-          </picture>
-        </article>
-
-        <article class="flexy__box flexy__box--noimg flexy__box--js" data-col="1" data-row="2">
-          <div class="flexy__box__content">
-            <p>Hi there</p>
+          <div class="flexy__content">
+            <picture>
+              <source media="(min-width: 556px)" srcset="images/mountain-desktop.jpg">
+              <img src="images/mountain-small.jpg" alt="mountains">
+            </picture>
+            <div class="flexy__caption-box">
+              <p class="flexy__eyebrow">Corporate</p>
+              <p class="flexy__caption">Introducing Checkpoint Catalyst™ – The fastest, most efficient way to research even the most complicated tax issues. <a href="#">Learn more</a></p>
+            </div>
           </div>
         </article>
 
         <article class="flexy__box flexy__box--js" data-col="2" data-row="1">
           <picture>
-            <source media="(min-width: 600px)" srcset="images/village-desktop.jpg">
+            <source media="(min-width: 556px)" srcset="images/flower-desktop.jpg">
+            <img src="images/flower-small.jpg" alt="flowers">
+          </picture>
+        </article>
+
+        <article class="flexy__box flexy__box--noimg flexy__box--js" data-col="1" data-row="2">
+          <div class="flexy__text-box flexy__text-box--grey">
+            <h2 class="flexy__header">Hi there</h2>
+          </div>
+        </article>
+
+        <article class="flexy__box flexy__box--js" data-col="2" data-row="1">
+          <picture>
+            <source media="(min-width: 556px)" srcset="images/village-desktop.jpg">
             <img src="images/village-small.jpg" alt="villages">
           </picture>
         </article>
 
         <article class="flexy__box flexy__box--js" data-col="1" data-row="1">
           <picture>
-            <source media="(min-width: 600px)" srcset="images/city-desktop.jpg">
+            <source media="(min-width: 556px)" srcset="images/city-desktop.jpg">
             <img src="images/city-small.jpg" alt="city">
           </picture>
         </article>
 
         <article class="flexy__box flexy__box--js" data-col="1" data-row="1">
           <picture>
-            <source media="(min-width: 600px)" srcset="images/cat-desktop.jpg">
+            <source media="(min-width: 556px)" srcset="images/cat-desktop.jpg">
             <img src="images/cat-small.jpg" alt="cats">
           </picture>
         </article>
@@ -89,6 +95,7 @@
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/tooltip.js"></script>
     <script src="bower_components/bootstrap-sass-official/assets/javascripts/bootstrap/popover.js"></script>
     <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/picturefill/dist/picturefill.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
