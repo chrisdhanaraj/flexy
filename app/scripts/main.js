@@ -1,5 +1,7 @@
 /* global _ */
 
+// Ignore this line.
+
 (function($) {
     // test everything
 
