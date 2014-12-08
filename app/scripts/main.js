@@ -1,6 +1,6 @@
 /* global _ */
 
-(function($) {
+(function() {
     // test everything
 
     'use strict';
@@ -150,16 +150,16 @@
         }
 
         function moveItem(item) {
-            var $el = $(item.el);
+            var el = item.el;
             var x = item.colPos * config.width;
             var y = item.rowNum * config.height;
 
-            $el.css('transform', 'translate(' + x + 'px, ' + y + 'px');
-            $el.css('height', config.height * item.row);
+            el.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+            el.style.height = config.height * item.row + 'px';
             if (rowSize !== 1) {
-                $el.css('width', config.width * item.col);
+                el.style.width = config.width * item.col + 'px';
             } else {
-                $el.css('width', '100%');
+                el.style.width = '100%' + 'px';
             }
 
         }
@@ -196,8 +196,6 @@
         // define amount of space and priority
         // return gridelements and properties
 
-        // check if it's a picture one
-        console.log(el);
         var col = el.getAttribute('data-col');
         var row = el.getAttribute('data-row');
 
@@ -217,4 +215,4 @@
 
 
 
-})(jQuery);
+})();
