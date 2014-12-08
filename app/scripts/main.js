@@ -5,20 +5,27 @@
 
     'use strict';
 
+    // this configuration is for four columns
+    // on a 1200px grid
     var config = {
         width: 300,
         height: 270,
     };
 
     function flexy(element) {
+        // element == the grid selector, used to collect gridElements
         var flexyGrid = [];
         var rowSize = getRowSize();
         var elOnPage = element.querySelectorAll('.flexy__box--js');
         var internalGrid = initGrid(rowSize);
+
         init();
 
         var resize = _.debounce(calculateLayout, 150);
         $(window).on('resize', resize);
+
+        // logging purposes only I suppose
+        // all the functions are used internally
 
         return flexyGrid;
 
@@ -28,6 +35,7 @@
 
 
         function calculateLayout() {
+            // if row size is different, redo the grid
             var newSize = getRowSize();
             if (newSize !== rowSize) {
                 rowSize = newSize;
@@ -39,11 +47,14 @@
         }
 
         function init() {
+            // grab the the internal boxes
+            // make them into a gridElement
+            // add them to the gridArray container
             _.forEach(elOnPage, function(item) {
-                console.log(internalGrid);
                 flexyGrid.push(addItem(gridElement(item)));
             });
 
+            // CSS the items
             _.forEach(flexyGrid, function(item) {
                 moveItem(item);
             });
@@ -51,36 +62,32 @@
 
         function addItem(item) {
             // take item, compare to internal grid
-            // add x, y coordinates
+            // fill up the internal grid to mark used spaces
 
             var width = Number(item.col);
             var height = Number(item.row);
 
+            // at 1 column, there are no 2 column gridElements
             if (rowSize === 1) {
                 width = 1;
             }
 
-            var coord = positionTest(item);
+            // get the row number and column position of the element
+            var coord = getPosition(item);
 
             item.colPos = coord.colPos;
             item.rowNum = coord.rowNum;
 
             for (var ii = 0; ii < width; ii++) {
-                // how wide
                 for (var jj = 0; jj < height; jj++) {
-                    // how tall
-                    console.log('ii: ', ii);
-                    console.log('jj: ', jj);
-                    console.log('item.colPos: ', item.colPos);
-                    console.log('item.rowNum: ', item.rowNum);
                     internalGrid[jj + item.rowNum][ii + item.colPos] = 1;
                 }
             }
-            // check for width and height
+
             return item;
         }
 
-        function positionTest(item) {
+        function getPosition(item) {
             var width = Number(item.col);
             var height = Number(item.row);
 
