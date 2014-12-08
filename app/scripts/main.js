@@ -49,8 +49,10 @@
             // grab the the internal boxes
             // make them into a gridElement
             // add them to the gridArray container
-            console.log('Original: ', elOnPage);
             if (rowSize < 4) {
+                // if row size goes to anything but large desktop,
+                // sort by priority order instead of element order
+                // if no priority set, default is 99
                 elOnPage = _.sortBy(elOnPage, function(el) {
                     return el.getAttribute('data-priority') === null ? 99 : el.getAttribute('data-priority');
                 });
