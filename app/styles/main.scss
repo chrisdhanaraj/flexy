@@ -1,18 +1,15 @@
-$icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/bootstrap/";
-// bower:scss
-@import "bootstrap-sass-official/assets/stylesheets/_bootstrap.scss";
-// endbower
-
-.container{
-  @media (min-width: 1200px) {
-    width: 1200px;
-  }
+.container {
+  margin: 0 auto;
 }
 
 .flexy {
+  background-color: #fff;
+  margin: 0 auto;
+}
+
+.flexy__container {
   position: relative;
-  margin-left: -15px;
-  margin-right: -15px;
+  margin: 0 auto;
 
   &:after {
     display: table;
@@ -20,7 +17,6 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
     clear: both;
   }
 }
-
 
 .flexy__box {
   overflow: hidden;
@@ -30,16 +26,48 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
 }
 
 .flexy__content {
-  width: 100%;
+  max-width: 500px;
   height: 100%;
   overflow: hidden;
   position: relative;
+
+  @media (min-width: 600px) {
+    max-width: 100%;  
+  }
+
+  .flexy__caption-box {
+    position: absolute;
+    padding: 10px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgb(0,0,0);
+    background: rgba(0,0,0,0.75);
+    
+  }
+
+  .flexy__caption {
+    color: #fff;
+    margin: 0;
+  }
+
+  .flexy__eyebrow {
+    color: #fff;
+    font-size: 12px;
+    margin: 0;
+    text-transform: uppercase;
+  }
 }
 
 .flexy__text-box {
   width: 100%;
   height: 100%;
   padding: 10px;
+  max-width: 500px;
+
+  @media (min-width: 600px) {
+    max-width: auto;
+  }
 }
 
 .flexy__text-box--grey {
@@ -52,23 +80,14 @@ $icon-font-path: "../bower_components/bootstrap-sass-official/assets/fonts/boots
   border-bottom: 1px solid #d0d0d0;
 }
 
-.flexy__caption-box {
-  position: absolute;
-  padding: 10px;
-  bottom: 0;
-  background: rgb(0,0,0);
-  background: rgba(0,0,0,0.5);
-  color: #fff;
+article + article {
+  margin-top: 0;
 }
 
-.flexy__eyebrow {
-  font-size: 12px;
-  margin: 0;
-  text-transform: uppercase;
+picture {
+  max-width: 500px;
 
-}
-
-picture > * {
-  height: 100%;
-  width: 100%;
+  @media (max-width: 600px) {
+    max-width: auto;
+  }
 }

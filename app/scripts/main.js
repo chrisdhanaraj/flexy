@@ -7,9 +7,10 @@
 
     // this configuration is for four columns
     // on a 1200px grid
-    var CONFIG = { 
+    var CONFIG = {
+        container: '.flexy__container',
         width: 300,
-        height: 270,
+        height: 300,
     };
 
     /**
@@ -20,9 +21,10 @@
      *
      */
     function flexy(element) {
+        var container = element.querySelector(CONFIG.container);
         var flexyGrid = [];
         var rowSize = getRowSize();
-        var elOnPage = element.querySelectorAll('.flexy__box--js');  // this string should be a constant
+        var elOnPage = container.querySelectorAll('.flexy__box--js');  // this string should be a constant
         var internalGrid = createEmptyGrid(rowSize);
 
         init();  // how is init() different from createEmptyGrid() ? pick better names
@@ -46,8 +48,6 @@
          *  and starts the init function
          */
         function calculateLayout() {
-            
-
             var newSize = getRowSize();
             if (newSize !== rowSize) {
                 rowSize = newSize;
@@ -65,8 +65,6 @@
          *  Also sorts the grid by priority if rowSize is below than 4
          */
         function init() {
-            
-
             if (rowSize < 4) {
                 elOnPage = _.sortBy(elOnPage, function(el) {
                     return el.getAttribute('data-priority') === null ? 99 : el.getAttribute('data-priority');
@@ -81,6 +79,19 @@
             _.forEach(flexyGrid, function(item) {
                 moveItem(item);
             });
+
+            var totalRowNum = _.max(flexyGrid, function(item) {
+                return item.rowNum;
+            }).rowNum;
+
+            $(CONFIG.container).css('height', (totalRowNum + 1) * CONFIG.height);
+
+            if (rowSize > 1) {
+                $(CONFIG.container).css('width', rowSize * CONFIG.width);      
+            } else {
+                $(CONFIG.container).css('width', 'auto');
+            }
+              
         }
 
         /**
@@ -91,8 +102,6 @@
          *  @return: gridElement
          */
         function addItem(item) {
-            
-
             var width = Number(item.col);
             var height = Number(item.row);
 
@@ -122,8 +131,7 @@
          *  @param: gridElement
          *  @return: obj containing start row number and column number
          */
-        function getPosition(item) {
-            
+        function getPosition(item) {  
             var width = Number(item.col);
             var height = Number(item.row);
 
@@ -137,29 +145,35 @@
             // looping through each row
             rowNum = _.findIndex(internalGrid, function(currentRow, currentRowNumber, matrix) {
                 // horizontal check
-                for (var currentCol = 0; currentCol < currentRow.length; currentCol++) {
+                for (var currentCol = 0; currentCol < currentRow.length; currentCol+=1) {
+                    var sliced = currentRow.slice(currentCol, currentCol + width);
                     if ((currentCol + width) > currentRow.length) {
-                        break;
+                        continue;
                     }
-
-                    var sliced = currentRow.slice(currentCol + 1, currentCol + width);
 
                     if (_.indexOf(sliced, 1) !== -1) {
                         // there's a 1 in there somewhere
-                        break;
+                        continue;
                     }
 
-                    for (var vertIndex = 0; vertIndex < height; vertIndex++) {
-                        if (matrix[vertIndex + currentRowNumber][currentCol] !== 0) {
-                            break;
-                        }
-
-                        // we good to go, lock it in champ
+                    if (verticalTest (matrix, currentRowNumber, currentCol)) {
                         col = currentCol;
                         return true;
                     }
                 }
             });
+
+
+            function verticalTest(matrix, currentRowNumber, currentCol) {
+                for (var vertIndex = 0; vertIndex < height; vertIndex++) {
+                    if (matrix[vertIndex + currentRowNumber][currentCol] !== 0) {
+                        // no space vertically
+                        return false;
+                    }
+                }
+
+                return true;
+            }
 
             return {
                 colPos: col,
@@ -213,8 +227,6 @@
          *  @return: rowSize, i.e. number of columns in a row
          */
         function getRowSize() {
-            
-
             var rowSize = Math.floor(element.offsetWidth / (CONFIG.width));
             if (rowSize === 0) {
                 rowSize = 1;
@@ -237,8 +249,6 @@
      *    row: data-row
      */
     function gridElement(el) {
-        
-        console.log(el);
         var col = el.getAttribute('data-col');
         var row = el.getAttribute('data-row');
 
