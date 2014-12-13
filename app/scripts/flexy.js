@@ -9,7 +9,7 @@
     // on a 1200px grid
     var CONFIG = {
         container: '.flexy__container',
-        width: 300,
+        width: 292.5,
         height: 300,
     };
 
