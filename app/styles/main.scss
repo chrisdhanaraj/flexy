@@ -2,9 +2,21 @@
   margin: 0 auto;
 }
 
+.texture-home {
+  background-color: #fff;
+}
+
 .flexy {
   background-color: #fff;
   margin: 0 auto;
+
+  picture {
+    max-width: 500px;
+
+    @media (max-width: 600px) {
+      max-width: auto;
+    }
+  }
 }
 
 .flexy__container {
@@ -82,12 +94,4 @@
 
 article + article {
   margin-top: 0;
-}
-
-picture {
-  max-width: 500px;
-
-  @media (max-width: 600px) {
-    max-width: auto;
-  }
 }
