@@ -2,7 +2,8 @@
 
 .flexy {
   position: relative;
-  margin: 0 auto;
+  padding-left: 0;
+  padding-right: 0;
 
   picture {
     img {
@@ -23,12 +24,17 @@
   }
 }
 
+
 .flexy__box {
   display: none;
   overflow: hidden;
   position: absolute;
   padding: 10px;
   transition: transform 450ms cubic-bezier(0.280, 0.410, 0.035, .950);
+
+  &.flexy__transform-animation {
+    transition: transform 750ms ease;
+  }
 }
 
 .flexy__twocolumn__onerow {

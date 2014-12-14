@@ -21,7 +21,7 @@
      *
      */
     function flexy(element) {
-        var initLoad = false;
+        var initLoadDone = false;
         var container = element.querySelector(CONFIG.container);
         var flexyGrid = [];
         var rowSize = getRowSize();
@@ -80,6 +80,9 @@
             // CSS the items
             _.forEach(flexyGrid, function(item) {
                 moveItem(item);
+                if (!initLoadDone) {
+                    $(item.el).addClass('flexy__transform-animation');
+                }
             });
 
             var totalRowNum = _.max(flexyGrid, function(item) {
@@ -94,7 +97,7 @@
                 $(CONFIG.container).css('width', 'auto');
             }
 
-            initLoad = true;
+            initLoadDone = true;
               
         }
 
@@ -191,12 +194,13 @@
          *  @param: gridElement
          */
         function moveItem(item) {
+
             var $el = $(item.el);
             var x = item.colPos * CONFIG.width;
             var y = item.rowNum * CONFIG.height;
-
+            
             if (Modernizr.csstransforms) {
-                if (!initLoad) {
+                if (!initLoadDone) {
                     $el.css('transform', 'translate(' + x + 'px, 1000px');
                     $el.css('display', 'block');
                     window.setTimeout( function() {
@@ -210,6 +214,9 @@
                 $el.css('left', x + 'px');
                 $el.css('top', y + 'px');
             }
+
+            console.log(!$el.hasClass('flexy__transform-animation'));
+            
             
             $el.css('height', CONFIG.height * item.row);
             if (rowSize !== 1) {
