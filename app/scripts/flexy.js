@@ -54,8 +54,13 @@
                 internalGrid = createEmptyGrid(rowSize);
                 flexyGrid = [];
                 init();
+            } else {
+                _.forEach(flexyGrid, function(item) {
+                    moveItem(item);
+                });
             }
         }
+
 
         /**
          *  Initialization function - gets all the gridElments on the page,
@@ -76,11 +81,6 @@
             _.forEach(priorityGrid, function(item) {
                 flexyGrid.push(addItem(gridElement(item)));
             });
-            
-            // CSS the items
-            _.forEach(flexyGrid, function(item) {
-                moveItem(item);
-            });
 
             var totalRowNum = _.max(flexyGrid, function(item) {
                 return item.rowNum;
@@ -94,6 +94,13 @@
                 $(CONFIG.container).css('width', 'auto');
             }
 
+            
+            // CSS the items
+            _.forEach(flexyGrid, function(item) {
+                moveItem(item);
+            });
+
+           
             initLoadDone = true;
               
         }
@@ -191,10 +198,18 @@
          *  @param: gridElement
          */
         function moveItem(item) {
-
             var $el = $(item.el);
-            var x = item.colPos * CONFIG.width;
+
+            var centering = ($(window).width() - (rowSize * CONFIG.width)) / 2;
+            if (rowSize === 1) {
+                centering = 0;
+            }
+            console.log(centering);
+
+            var x = item.colPos * CONFIG.width + centering;
             var y = item.rowNum * CONFIG.height;
+
+
             
             if (Modernizr.csstransforms) {
                 if (!initLoadDone) {
