@@ -80,9 +80,6 @@
             // CSS the items
             _.forEach(flexyGrid, function(item) {
                 moveItem(item);
-                if (!initLoadDone) {
-                    $(item.el).addClass('flexy__transform-animation');
-                }
             });
 
             var totalRowNum = _.max(flexyGrid, function(item) {
@@ -205,6 +202,9 @@
                     $el.css('display', 'block');
                     window.setTimeout( function() {
                         $el.css('transform', 'translate(' + x + 'px, ' + y + 'px');
+                        window.setTimeout(function() {
+                            $el.addClass('flexy__transform-animation');
+                        }, 450);
                     }, 250);
                 } else {
                     $el.css('transform', 'translate(' + x + 'px, ' + y + 'px');
@@ -213,10 +213,7 @@
             } else {
                 $el.css('left', x + 'px');
                 $el.css('top', y + 'px');
-            }
-
-            console.log(!$el.hasClass('flexy__transform-animation'));
-            
+            }            
             
             $el.css('height', CONFIG.height * item.row);
             if (rowSize !== 1) {
