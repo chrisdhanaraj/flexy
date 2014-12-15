@@ -12,16 +12,16 @@ An example can be seen at chrisdhanaraj.github.io/flexy
 
 ## How to use
 
-Include flexy.js
-Include _flexy.scss (currently only SASS, though I suppose I'll fix the structure to include others)
+- Include flexy.js
+- Include _flexy.scss (currently only SASS, though I suppose I'll fix the structure to include others)
 
 ## Structure
 
 Each box has three different configurable data attributes. 
 
-**data-col** - number of columns (width)
-**data-row** - number of rows (height)
-**data-priority** - priority level (if left out, defaults to 99)
+- **data-col** - number of columns (width)
+- **data-row** - number of rows (height)
+- **data-priority** - priority level (if left out, defaults to 99)
 
 data-priority is used when the number of columns is less than 4 (four being the max number of columns). The assumption is that when the grid rearranges for smaller screen sizes, its possible you would want different content higher up.
 
@@ -48,4 +48,5 @@ data-priority is used when the number of columns is less than 4 (four being the 
 ## Dependencies
 
 lodash (just for fun)
+
 jQuery (making IE8 compat easy)
