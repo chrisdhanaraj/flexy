@@ -27,10 +27,10 @@
         var rowSize = getRowSize();
         var elOnPage = container.querySelectorAll('.flexy__box--js');  // this string should be a constant
         var internalGrid = createEmptyGrid(rowSize);
-
+        centerTheGrid();
         init();  // how is init() different from createEmptyGrid() ? pick better names
         
-        var resize = _.debounce(calculateLayout, 150);  // constant for 150
+        var resize = _.debounce(calculateLayout, 50);  // constant for 150
         $(window).on('resize', resize);
 
         // logging purposes only I suppose
@@ -51,14 +51,22 @@
             var newSize = getRowSize();
             if (newSize !== rowSize) {
                 rowSize = newSize;
+                centerTheGrid();
                 internalGrid = createEmptyGrid(rowSize);
                 flexyGrid = [];
                 init();
+
             } else {
-                _.forEach(flexyGrid, function(item) {
-                    moveItem(item);
-                });
+                centerTheGrid();
             }
+        }
+
+        function centerTheGrid() {
+            var centering = ($(window).width() - (rowSize * CONFIG.width)) / 2;
+            if (rowSize === 1) {
+                centering = 0;
+            }
+            $(container).css('transform', 'translateX(' + centering + 'px)');
         }
 
 
@@ -199,14 +207,7 @@
          */
         function moveItem(item) {
             var $el = $(item.el);
-
-            var centering = ($(window).width() - (rowSize * CONFIG.width)) / 2;
-            if (rowSize === 1) {
-                centering = 0;
-            }
-            console.log(centering);
-
-            var x = item.colPos * CONFIG.width + centering;
+            var x = item.colPos * CONFIG.width;
             var y = item.rowNum * CONFIG.height;
 
 
