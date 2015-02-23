@@ -63,7 +63,9 @@
 
         function centerTheGrid() {
             var centering = ($(window).width() - (rowSize * CONFIG.width)) / 2;
+            console.log('rowSize: ', rowSize);
             if (rowSize === 1) {
+                console.log('hi');
                 centering = 0;
             }
             $(container).css('transform', 'translateX(' + centering + 'px)');
