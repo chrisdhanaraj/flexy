@@ -1,312 +1,144 @@
-/* global _, Modernizr */
-// add a file-level comment explaining what this file is about and simple
-// sample code for how to use flexy
+/* global Modernizr */
 
-(function($) {
-    'use strict';
+( function($){
+  'use strict';
 
-    // this configuration is for four columns
-    // on a 1200px grid
-    var CONFIG = {
-        container: '.flexy__container',
-        width: 292.5,
-        height: 300,
-    };
-
-    /**
-     * flexy creates the 'grid.' It sets the height/width and positioning
-     * of each box
-     *
-     *   @param element - div container of the grid elements
-     *
-     */
-    function flexy(element) {
-        var initLoadDone = false;
-        var container = element.querySelector(CONFIG.container);
-        var flexyGrid = [];
-        var rowSize = getRowSize();
-        var elOnPage = container.querySelectorAll('.flexy__box--js');  // this string should be a constant
-        var internalGrid = createEmptyGrid(rowSize);
-        centerTheGrid();
-        init();  // how is init() different from createEmptyGrid() ? pick better names
-        
-        var resize = _.debounce(calculateLayout, 50);  // constant for 150
-        $(window).on('resize', resize);
-
-        // logging purposes only I suppose
-        // all the functions are used internally
-
-        return flexyGrid;
-
-        // ----------------
-        // Functions
-        // ----------------
-
-        /**
-         *  Checks the row size on window resize
-         *  If changed, resets the internal grid 
-         *  and starts the init function
-         */
-        function calculateLayout() {
-            var newSize = getRowSize();
-            if (newSize !== rowSize) {
-                rowSize = newSize;
-                centerTheGrid();
-                internalGrid = createEmptyGrid(rowSize);
-                flexyGrid = [];
-                init();
-
-            } else {
-                centerTheGrid();
-            }
-        }
-
-        function centerTheGrid() {
-            var centering = ($(window).width() - (rowSize * CONFIG.width)) / 2;
-            console.log('rowSize: ', rowSize);
-            if (rowSize === 1) {
-                console.log('hi');
-                centering = 0;
-            }
-            $(container).css('transform', 'translateX(' + centering + 'px)');
-        }
+  var FlexyGrid = function(settings) {
+    // Settings
+    this.container = settings.container; // grid element
+    this.width = settings.width; // box width
+    this.height = settings.height; // box height
+    this.box = settings.box; // box element
 
 
-        /**
-         *  Initialization function - gets all the gridElments on the page,
-         *  makes them into gridElements, pushes them into the flexy container,
-         *  and sets the css.
-         *  
-         *  Also sorts the grid by priority if rowSize is below than 4
-         */
-        function init() {
-            var priorityGrid = _.clone(elOnPage, true);
-
-            if (rowSize < 4) {
-                priorityGrid = _.sortBy(priorityGrid, function(el) {
-                    return el.getAttribute('data-priority') === null ? 99 : el.getAttribute('data-priority');
-                });
-            }
-
-            _.forEach(priorityGrid, function(item) {
-                flexyGrid.push(addItem(gridElement(item)));
-            });
-
-            var totalRowNum = _.max(flexyGrid, function(item) {
-                return item.rowNum;
-            }).rowNum;
-
-            $(CONFIG.container).css('height', (totalRowNum + 1) * CONFIG.height);
-
-            if (rowSize > 1) {
-                $(CONFIG.container).css('width', rowSize * CONFIG.width);      
-            } else {
-                $(CONFIG.container).css('width', 'auto');
-            }
-
-            
-            // CSS the items
-            _.forEach(flexyGrid, function(item) {
-                moveItem(item);
-            });
-
-           
-            initLoadDone = true;
-              
-        }
-
-        /**
-         *  Sets internal grid to occupied (in x,y positions) and gives the 
-         *  gridElement it's start row number and column number
-         * 
-         *  @param: gridElement
-         *  @return: gridElement
-         */
-        function addItem(item) {
-            var width = Number(item.col);
-            var height = Number(item.row);
-
-            // at 1 column, there are no 2 column gridElements
-            if (rowSize === 1) {
-                width = 1;
-            }
-
-            // get the row number and column position of the element
-            var coord = getPosition(item);
-
-            item.colPos = coord.colPos;
-            item.rowNum = coord.rowNum;
-
-            for (var ii = 0; ii < width; ii++) {
-                for (var jj = 0; jj < height; jj++) {
-                    internalGrid[jj + item.rowNum][ii + item.colPos] = 1;
-                }
-            }
-
-            return item;
-        }
-
-        /**
-         *  Loops through the internal grid to find unoccupied spaces
-         * 
-         *  @param: gridElement
-         *  @return: obj containing start row number and column number
-         */
-        function getPosition(item) {  
-            var width = Number(item.col);
-            var height = Number(item.row);
-
-            if (rowSize === 1) {
-                width = 1;
-            }
-
-            var col = 0;
-            var rowNum = 0;
-
-            // looping through each row
-            rowNum = _.findIndex(internalGrid, function(currentRow, currentRowNumber, matrix) {
-                // horizontal check
-                for (var currentCol = 0; currentCol < currentRow.length; currentCol+=1) {
-                    var sliced = currentRow.slice(currentCol, currentCol + width);
-                    if ((currentCol + width) > currentRow.length) {
-                        continue;
-                    }
-
-                    if (_.indexOf(sliced, 1) !== -1) {
-                        // there's a 1 in there somewhere
-                        continue;
-                    }
-
-                    if (verticalTest (matrix, currentRowNumber, currentCol)) {
-                        col = currentCol;
-                        return true;
-                    }
-                }
-            });
+    // Grids
+    this.grid = $(this.container).find(this.box); // unsorted grid
+    this.priorityGrid = this.grid.slice(0).sort(function(a, b){
+      a = $(a).data('priority') || 99;
+      b = $(b).data('priority') || 99;
+      return a - b;
+    }); //sorted grid, use if rowsize less than four
 
 
-            function verticalTest(matrix, currentRowNumber, currentCol) {
-                for (var vertIndex = 0; vertIndex < height; vertIndex++) {
-                    if (matrix[vertIndex + currentRowNumber][currentCol] !== 0) {
-                        // no space vertically
-                        return false;
-                    }
-                }
+    // States
+    this.state = []; // gridStated
+    this.currentRow = 0; // initial zero
+  };
 
-                return true;
-            }
-
-            return {
-                colPos: col,
-                rowNum: rowNum
-            };
-        }
-
-        /**
-         *  Adds the css to move the element to grid position
-         *
-         *  @param: gridElement
-         */
-        function moveItem(item) {
-            var $el = $(item.el);
-            var x = item.colPos * CONFIG.width;
-            var y = item.rowNum * CONFIG.height;
-
-
-            
-            if (Modernizr.csstransforms) {
-                if (!initLoadDone) {
-                    $el.css('transform', 'translate(' + x + 'px, 1000px');
-                    $el.css('display', 'block');
-                    window.setTimeout( function() {
-                        $el.css('transform', 'translate(' + x + 'px, ' + y + 'px');
-                        window.setTimeout(function() {
-                            $el.addClass('flexy__transform-animation');
-                        }, 450);
-                    }, 250);
-                } else {
-                    $el.css('transform', 'translate(' + x + 'px, ' + y + 'px');
-                }
-                
-            } else {
-                $el.css('left', x + 'px');
-                $el.css('top', y + 'px');
-            }            
-            
-            $el.css('height', CONFIG.height * item.row);
-            if (rowSize !== 1) {
-                $el.css('width', CONFIG.width * item.col);
-            } else {
-                $el.css('width', '100%');
-            }
-
-        }
-
-        /**
-         *  Initializes a bunch of empty rows to be filled in
-         *
-         *  @param: rowSize, i.e. number of columns in a row
-         *  @return: arr, two dimensional array of 0's
-         */
-        function createEmptyGrid(rsize) {
-            
-            var arr = [];
-            for (var i = 0; i < 20; i++) {
-                arr[i] = [];
-
-                for (var j = 0; j < rsize; j++) {
-                    arr[i][j] = 0;
-                }
-            }
-
-            return arr;
-        }
-
-        /**
-         *  Finds the number of columns that would fit in the parant div 
-         *  
-         *  @return: rowSize, i.e. number of columns in a row
-         */
-        function getRowSize() {
-            var rowSize = Math.floor(element.offsetWidth / (CONFIG.width));
-            if (rowSize === 0) {
-                rowSize = 1;
-            }
-            if (rowSize >= 4) {
-                rowSize = 4;
-            }
-
-            return rowSize;
-        }
-    }
+  FlexyGrid.prototype = {
 
     /**
-     *  Container for various properties for grid blocks
-     *  
-     *  @param: el, div blocks
-     *  @return: 
-     *    el: the div element
-     *    col: data-col
-     *    row: data-row
-     */
-    function gridElement(el) {
-        var col = el.getAttribute('data-col');
-        var row = el.getAttribute('data-row');
+    *	returns the number of boxes that can fit into a row
+    * at the current browser/parent width
+    */
 
-        return {
-            el: el,
-            col: col,
-            row: row
-        };
+    stateInit: function(rowSize){
+      var arr = [];
+      for (var i = 0; i < 20; i++) {
+        arr[i] = [];
+
+        for (var j = 0; j , rowSize; j++) {
+          arr[i][j] = 0;
+        }
+      }
+
+      return arr;
+    },
+    verticalTest: function() {
+
+    },
+    horizontalTest: function(rowNum, rowSize) {
+      // only check current row, return true/false
+
+      var self = this;
+      var currentRow = self.state[self.currentRow];
+
+      for (var i; i < rowSize; i++) {
+        var sliced = currentRow.slice(i, i+rowNum);
+
+        // found inside
+        if ($.inArray(1, sliced) !== -1) {
+          return true;
+        }
+      }
+
+      return false;
+    },
+
+    positionTest: function(rowSize, rowNum, columns) {
+      var currentCol;
+      var currentRow;
+      var pass;
+      var self = this;
+
+
+      if (self.horizontalTest(rowNum, rowSize)) {
+        if (self.verticalTest(rowNum)) {
+
+        }
+
+        self.positionTest(rowSize, rowNum, columns);
+      }
+
+
+
+    },
+
+    getRowSize: function() {
+      var containerWidth = $(this.container).css('width');
+			return (containerWidth < 1) ? 1 : containerWidth;
+    },
+
+    moveItem: function(item, rowSize) {
+      var self = this;
+      var rowNum = $(item).data('row');
+      var columns = $(item).data('col');
+
+      var positionTest = self.positionTest(rowSize, rowNum, columns);
+
+      var checkBrowserSupport = Modernizr.csstransforms;
+      if (checkBrowserSupport) {}
+
+      if(positionTest.pass) {
+
+      }
+
+
+      console.log(item);
+    },
+
+    init: function() {
+    	//var initLoadDone = false;
+      var self = this;
+      var rowSize = self.getRowSize();
+      var currentGrid = (rowSize !== 4) ? self.grid : self.priorityGrid;
+
+      // setup
+      self.state = self.stateInit(rowSize);
+
+      $.each(currentGrid, function(i, val) {
+        self.moveItem(val, rowSize);
+      });
     }
 
-    var gridsOnPage = document.querySelectorAll('.flexy');
+  };
 
-    _.forEach(gridsOnPage, function(item) {
-        item = flexy(item);
-        console.log('flexy: ', item);
-    });
+  $.fn.flexy = function(config) {
+    var settings = $.extend({
+      container: this,
+      box: '.flexy__box',
+      width: 300,
+      height: 300
+    }, config);
 
+    return new FlexyGrid(settings).init();
+  };
+
+  // how to use
+  // $('.flexy__container').flexy({
+  //   width: 300,
+  //   height: 200
+  // });
 
 
 })(jQuery);

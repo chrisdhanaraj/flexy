@@ -26,113 +26,11 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="flexy container">
-      <div class="flexy__container">
-        <article class="flexy__box flexy__box--js" data-col="2" data-row="1" data-priority="1">
-          <div class="flexy__content">
-            <picture>
-              <source media="(min-width: 600px)" srcset="/images/mountains__desktop.jpg">
-              <img src="/images/mountains__mobile.jpg" alt="mountains">
-            </picture>
-            <div class="flexy__caption-box">
-              <p class="flexy__eyebrow">Tag</p>
-              <p class="flexy__caption">Exampe of a caption paragraph <a href="#">Learn more</a></p>
-            </div>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--js" data-col="1" data-row="1" data-priority="3">
-          <div class="flexy__content">
-            <picture>
-              <source media="(min-width: 600px)" srcset="/images/coffee__desktop.jpg">
-              <img src="/images/coffee__mobile.jpg" alt="coffee">
-            </picture>
-            <div class="flexy__caption-box">
-              <p class="flexy__eyebrow">Tags | More Tags</p>
-              <p class="flexy__caption">Coffee is delicious. <a href="#">Learn More</a></p>
-            </div>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--js" data-col="2" data-row="1" data-priority="2">
-          <div class="flexy__content">
-            <picture>
-              <source media="(min-width: 600px)" srcset="/images/skyline__desktop.jpg">
-              <img src="/images/skyline__mobile.jpg" alt="skylines">
-            </picture>
-            <div class="flexy__caption-box">
-              <p class="flexy__eyebrow">Fufufu</p>
-              <p class="flexy__caption">Can't wait for this Cities: Skyline game. <a href="https://www.paradoxplaza.com/cities-skylines">Learn more about it</a></p>
-            </div>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--js" data-col="1" data-row="1">
-          <div class="flexy__content">
-            <picture>
-              <source media="(min-width: 600px)" srcset="/images/boat__desktop.jpg">
-              <img src="/images/boat__mobile.jpg" alt="imonaboat">
-            </picture>
-            <div class="flexy__caption-box">
-              <p class="flexy__eyebrow">League | DOTA | HOTS</p>
-              <p class="flexy__caption">New MOBas.</p>
-            </div>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--js" data-col="1" data-row="1">
-          <div class="flexy__content">
-            <picture>
-              <source media="(min-width: 600px)" srcset="/images/village__desktop.jpg">
-              <img src="/images/village__mobile.jpg" alt="villages">
-            </picture>
-            <div class="flexy__caption-box">
-              <p class="flexy__eyebrow">Village</p>
-              <p class="flexy__caption">What is a village. <a href="http://en.wikipedia.org/wiki/Village">Learn more.</a></p>
-            </div>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--js" data-col="1" data-row="1">
-          <div class="flexy__content">
-            <picture>
-              <source media="(min-width: 600px)" srcset="/images/flowers__desktop.jpg">
-              <img src="/images/flowers__mobile.jpg" alt="Latest Indirect Tax Reports">
-            </picture>
-            <div class="flexy__caption-box">
-              <p class="flexy__eyebrow">Android</p>
-              <p class="flexy__caption">Research the <a href="#">latest Lollipop update</a></p>
-            </div>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--noimg flexy__box--js" data-col="1" data-row="1">
-          <div class="flexy__text-box flexy__text-box--grey">
-            <h2 class="flexy-header">Skype</h2>
-            <p>This is an example of a no image box</p>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--noimg flexy__box--js" data-col="1" data-row="1">
-          <div class="flexy__text-box flexy__text-box--grey">
-            <h2 class="flexy-header">Blog</h2>
-            <p>This is an example of a no image box</p>
-          </div>
-        </article>
-
-        <article class="flexy__box flexy__box--js" data-col="2" data-row="1">
-          <div class="flexy__content">
-            <picture>
-              <source media="(min-width: 600px)" srcset="/images/skyline__desktop.jpg">
-              <img src="/images/skyline__mobile.jpg" alt="Latest Indirect Tax Reports">
-            </picture>
-            <div class="flexy__caption-box">
-              <p class="flexy__eyebrow">MOBA | MMORPG</p>
-              <p class="flexy__caption">Games.</p>
-            </div>
-          </div>
-        </article>
-      </div>
+    <div class="flexy">
+      <div class="flexy__box three" data-row="1" data-col="2" data-priority="3"></div>
+      <div class="flexy__box two" data-row="1" data-col="1" data-priority="2"></div>
+      <div class="flexy__box four" data-priority="4" data-row="2" data-col="1"></div>
+      <div class="flexy__box one" data-priority="1" data-row="1" data-col="2"></div>
     </div>
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -157,7 +55,11 @@
 
 
     <!-- build:js({app,.tmp}) scripts/flexy.js -->
-    <script src="scripts/flexy.js"></script>
+    <script src="scripts/flexy-prototype.js"></script>
     <!-- endbuild -->
+
+    <script>
+      $('.flexy').flexy();
+    </script>
 </body>
 </html>
