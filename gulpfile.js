@@ -22,13 +22,7 @@ gulp.task('styles', function () {
     .pipe(reload({stream: true}));
 });
 
-gulp.task('js', function() {
-  return gulp.src('app/scripts/flexy.js')
-    .pipe($.babel())
-    .pipe(gulp.dest('app/scripts'));
-});
-
-gulp.task('serve', ['styles', 'js'], function() {
+gulp.task('serve', ['styles'], function() {
   browserSync({
     notify: false,
     server: {
@@ -41,10 +35,10 @@ gulp.task('serve', ['styles', 'js'], function() {
 
   gulp.watch([
     'app/*.html',
+    'app/scripts/**/*.js'
   ]).on('change', reload);
 
   gulp.watch('app/styles/**/*.scss', ['styles']);
-  gulp.watch('app/scripts/**/*.js', ['js']);
 });
 
 gulp.task('default', ['serve']);
