@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /* global Modernizr, jQuery */
 
@@ -14,8 +14,8 @@
     // Grids
     this.grid = $(this.container).find(this.box); // unsorted grid
     this.priorityGrid = this.grid.slice(0).sort(function (a, b) {
-      a = $(a).data("priority") || 99;
-      b = $(b).data("priority") || 99;
+      a = $(a).data('priority') || 99;
+      b = $(b).data('priority') || 99;
       return a - b;
     }); //sorted grid, use if rowsize less than four
 
@@ -36,63 +36,96 @@
       for (var i = 0; i < 20; i++) {
         arr[i] = [];
 
-        for (var j = 0; j, rowSize; j++) {
+        for (var j = 0; j < rowSize; j++) {
           arr[i][j] = 0;
         }
       }
 
       return arr;
     },
-    verticalTest: function verticalTest() {},
-    horizontalTest: function horizontalTest(rowNum, rowSize) {
-      // only check current row, return true/false
-
-      var self = this;
-      var currentRow = self.state[self.currentRow];
-
-      for (var i; i < rowSize; i++) {
-        var sliced = currentRow.slice(i, i + rowNum);
-
-        // found inside
-        if ($.inArray(1, sliced) !== -1) {
-          return true;
-        }
-      }
-
-      return false;
-    },
-
-    positionTest: function positionTest(rowSize, rowNum, columns) {
-      var currentCol;
-      var currentRow;
-      var pass;
-      var self = this;
-
-      if (self.horizontalTest(rowNum, rowSize)) {
-        if (self.verticalTest(rowNum)) {}
-
-        self.positionTest(rowSize, rowNum, columns);
-      }
-    },
 
     getRowSize: function getRowSize() {
-      var containerWidth = $(this.container).css("width");
+      var containerWidth = Math.floor(parseInt($(this.container).css('width'))/this.width);
       return containerWidth < 1 ? 1 : containerWidth;
     },
 
-    moveItem: function moveItem(item, rowSize) {
+    moveItem: function moveItem(item) {
       var self = this;
-      var rowNum = $(item).data("row");
-      var columns = $(item).data("col");
-
-      var positionTest = self.positionTest(rowSize, rowNum, columns);
+      var rowNum = parseInt($(item).data('row'));
+      var columns = parseInt($(item).data('col'));
 
       var checkBrowserSupport = Modernizr.csstransforms;
       if (checkBrowserSupport) {}
 
-      if (positionTest.pass) {}
+      // checks column
+      for (var currentRow = 0; currentRow < self.state.length; currentRow++) {
+        var horzResult = checkRow(self.state[currentRow]);
 
-      console.log(item);
+        // if both tests pass
+        if (horzResult.pass && checkCols(horzResult.col, currentRow)) {
+          markState(horzResult.col, currentRow);
+          console.log('mission complete');
+          $(item).css({
+            'left': this.width * horzResult.col + 'px',
+            'top': this.height * currentRow + 'px',
+            'height': this.height * columns,
+            'width': this.width * rowNum
+          });
+
+          break;
+          //move item
+        }
+      }
+
+      function checkRow(row) {
+        for (var j = 0; j < row.length; j++) {
+          // check fail states!
+
+          // check if bigger than row
+          // break out becauase this row is dead
+          console.log(j, rowNum, row);
+          if (j + rowNum > row.length) {
+            console.log('bigger than row');
+            break;
+          }
+
+          // this thing is occupied
+          if ($.inArray(1, row.slice(j, j + rowNum)) !== -1) {
+            console.log('occupied');
+            // go to the next row
+            continue;
+          }
+
+          return {
+            'pass': true,
+            'col': j
+          };
+        }
+
+        return {
+          'pass': false,
+          'col': 0
+        };
+      }
+
+      function checkCols(colPos, startRow) {
+        for (var k = 0; k < columns; k++) {
+          if ($.inArray(1, self.state[startRow + k].slice(colPos, colPos + rowNum)) !== -1 ) {
+            console.log('height');
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      function markState(colPos, startRow) {
+        for (var ii = 0; ii < columns; ii++) {
+          for (var jj = 0; jj < rowNum; jj++) {
+            self.state[startRow + ii][colPos + jj] = 1;
+          }
+        }
+      }
     },
 
     init: function init() {
@@ -107,6 +140,8 @@
       $.each(currentGrid, function (i, val) {
         self.moveItem(val, rowSize);
       });
+
+      console.log(this.state);
     }
 
   };
@@ -114,7 +149,7 @@
   $.fn.flexy = function (config) {
     var settings = $.extend({
       container: this,
-      box: ".flexy__box",
+      box: '.flexy__box',
       width: 300,
       height: 300
     }, config);
