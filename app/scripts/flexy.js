@@ -44,7 +44,6 @@
 
     // States
     this.state = []; // gridStated
-    this.firstResize = true;
     this.mobile = false;
   };
 
@@ -161,7 +160,7 @@
       }
     },
 
-    init: function() {
+    init: function(firstResize) {
       //var initLoadDone = false;
       var self = this;
       var rowSize = self.getRowSize();
@@ -177,9 +176,8 @@
 
       var resize = debounce(self.init.bind(this), 350);
 
-      if (self.firstResize) {
+      if (firstResize) {
         window.addEventListener('resize', resize);
-        self.firstResize = false;
       }
     }
   };
@@ -192,7 +190,7 @@
       height: 300
     }, config);
 
-    return new FlexyGrid(settings).init();
+    return new FlexyGrid(settings).init(true);
   };
 
   // how to use
