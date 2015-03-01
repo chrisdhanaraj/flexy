@@ -7,8 +7,13 @@
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
 
+    <!-- build:css styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+    <!-- build:js scripts/vendor/modernizr.js -->
     <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
 
   </head>
   <body>
@@ -29,9 +34,15 @@
     </div>
 
 
-
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:js scripts/main.js -->
     <script src="scripts/flexy.js"></script>
+    <!-- endbuild -->
 
     <script>
       $('.flexy').flexy();
