@@ -153,6 +153,7 @@
     init: function init() {
       //var initLoadDone = false;
       var self = this;
+      console.log(self);
       var rowSize = self.getRowSize();
       var currentGrid = rowSize !== 4 ? self.grid : self.priorityGrid;
 
@@ -163,12 +164,10 @@
         self.moveItem(val, rowSize);
       });
 
-      if (self.firstResize) {
-        console.log('first resize');
-        window.addEventListener('resize', function() {
-          debounce(self.init(), 250);
-        });
+      var resize = debounce(self.init.bind(this), 400);
 
+      if (self.firstResize) {
+        window.addEventListener('resize', resize);
         self.firstResize = false;
       }
     }
