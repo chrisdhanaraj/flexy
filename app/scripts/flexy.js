@@ -4,6 +4,29 @@
 
 (function ($) {
 
+  // ---------------------- ---------
+  // underscore debounce
+  // --------------------------------
+
+  function debounce(func, wait, immediate) {
+  	var timeout;
+  	return function() {
+  		var context = this, args = arguments;
+  		var later = function() {
+  			timeout = null;
+  			if (!immediate) {
+          func.apply(context, args);
+        }
+  		};
+  		var callNow = immediate && !timeout;
+  		clearTimeout(timeout);
+  		timeout = setTimeout(later, wait);
+  		if (callNow) {
+        func.apply(context, args);
+      }
+  	};
+  }
+
   var FlexyGrid = function FlexyGrid(settings) {
     // Settings
     this.container = settings.container; // grid element
@@ -64,7 +87,6 @@
         // if both tests pass
         if (horzResult.pass && checkCols(horzResult.col, currentRow)) {
           markState(horzResult.col, currentRow);
-          console.log('mission complete');
           $(item).css({
             'left': this.width * horzResult.col + 'px',
             'top': this.height * currentRow + 'px',
@@ -133,7 +155,7 @@
       var self = this;
       var rowSize = self.getRowSize();
       var currentGrid = rowSize !== 4 ? self.grid : self.priorityGrid;
-
+      var firstResize = true;
       // setup
       self.state = self.stateInit(rowSize);
 
@@ -141,9 +163,14 @@
         self.moveItem(val, rowSize);
       });
 
-      console.log(this.state);
-    }
+      if (firstResize) {
+        window.addEventListener('resize', function() {
+          debounce(self.init(), 250);
+        });
 
+        firstResize = false;
+      }
+    }
   };
 
   $.fn.flexy = function (config) {
