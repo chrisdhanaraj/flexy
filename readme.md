@@ -4,7 +4,7 @@ Renamed from flex-grid because I liked flexy.
 
 ## What is it
 
-Kind of a fun diversion (but used for work) and an excuse to play with lodash. It's a system similar to jQuery Masonry - sets up a bunch of boxes according to a grid structure. The system is responsive, and prefers translate over left/top if supported.
+An update to the initial Flexy grid structure - removing the lodash requirement as it really wasn't too useful. Swapped from the module system to the prototype pattern.
 
 I built it using the <picture> element comprising a lot of the core boxes (with Scott Jehl's [picturefill](https://github.com/scottjehl/picturefill) to provide browser compat), but there are boxes that don't use an image and are just a plain ole' box as well
 
@@ -13,11 +13,11 @@ An example can be seen at [chrisdhanaraj.github.io/flexy](chrisdhanaraj.github.i
 ## How to use
 
 - Include flexy.js
-- Include _flexy.scss (currently only SASS, though I suppose I'll fix the structure to include others)
+- Include flexy.scss
 
 ## Structure
 
-Each box has three different configurable data attributes. 
+Each box has three different configurable data attributes.
 
 - **data-col** - number of columns (width)
 - **data-row** - number of rows (height)
@@ -46,7 +46,4 @@ data-priority is used when the number of columns is less than 4 (four being the 
     </article>
 
 ## Dependencies
-
-lodash (just for fun)
-
 jQuery (making IE8 compat easy)
