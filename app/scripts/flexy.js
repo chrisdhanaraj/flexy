@@ -44,7 +44,7 @@
 
     // States
     this.state = []; // gridStated
-    this.currentRow = 0; // initial zero
+    this.firstResize = true;
   };
 
   FlexyGrid.prototype = {
@@ -105,15 +105,15 @@
 
           // check if bigger than row
           // break out becauase this row is dead
-          console.log(j, rowNum, row);
+          // console.log(j, rowNum, row);
           if (j + rowNum > row.length) {
-            console.log('bigger than row');
+            // console.log('bigger than row');
             break;
           }
 
           // this thing is occupied
           if ($.inArray(1, row.slice(j, j + rowNum)) !== -1) {
-            console.log('occupied');
+            // console.log('occupied');
             // go to the next row
             continue;
           }
@@ -133,7 +133,7 @@
       function checkCols(colPos, startRow) {
         for (var k = 0; k < columns; k++) {
           if ($.inArray(1, self.state[startRow + k].slice(colPos, colPos + rowNum)) !== -1 ) {
-            console.log('height');
+            // console.log('height');
             return false;
           }
         }
@@ -155,7 +155,7 @@
       var self = this;
       var rowSize = self.getRowSize();
       var currentGrid = rowSize !== 4 ? self.grid : self.priorityGrid;
-      var firstResize = true;
+
       // setup
       self.state = self.stateInit(rowSize);
 
@@ -163,12 +163,13 @@
         self.moveItem(val, rowSize);
       });
 
-      if (firstResize) {
+      if (self.firstResize) {
+        console.log('first resize');
         window.addEventListener('resize', function() {
           debounce(self.init(), 250);
         });
 
-        firstResize = false;
+        self.firstResize = false;
       }
     }
   };
