@@ -45,6 +45,7 @@
     // States
     this.state = []; // gridStated
     this.firstResize = true;
+    this.mobile = false;
   };
 
   FlexyGrid.prototype = {
@@ -54,7 +55,7 @@
     * at the current browser/parent width
     */
 
-    stateInit: function stateInit(rowSize) {
+    stateInit: function(rowSize) {
       var arr = [];
       for (var i = 0; i < 20; i++) {
         arr[i] = [];
@@ -67,14 +68,14 @@
       return arr;
     },
 
-    getRowSize: function getRowSize() {
+    getRowSize: function() {
       var containerWidth = Math.floor(parseInt($(this.container).css('width'))/this.width);
       return containerWidth < 1 ? 1 : containerWidth;
     },
 
-    moveItem: function moveItem(item) {
+    moveItem: function(item) {
       var self = this;
-      var rowNum = parseInt($(item).data('row'));
+      var rowNum = (self.mobile) ? parseInt($(item).data('row')) : 1;
       var columns = parseInt($(item).data('col'));
 
       var checkBrowserSupport = Modernizr.csstransforms;
@@ -87,12 +88,22 @@
         // if both tests pass
         if (horzResult.pass && checkCols(horzResult.col, currentRow)) {
           markState(horzResult.col, currentRow);
-          $(item).css({
-            'left': this.width * horzResult.col + 'px',
-            'top': this.height * currentRow + 'px',
-            'height': this.height * columns,
-            'width': this.width * rowNum
-          });
+
+          if (self.mobile) {
+            $(item).css({
+              'left': this.width * horzResult.col + 'px',
+              'top': this.height * currentRow + 'px',
+              'height': this.height * columns,
+              'width': this.width * rowNum
+            });
+          } else {
+            $(item).css({
+              'left' : 0,
+              'top' : this.height * currentRow + 'px',
+              'height': this.height * columns,
+              'width' : '100%'
+            });
+          }
 
           break;
           //move item
@@ -150,11 +161,11 @@
       }
     },
 
-    init: function init() {
+    init: function() {
       //var initLoadDone = false;
       var self = this;
-      console.log(self);
       var rowSize = self.getRowSize();
+      self.mobile = (rowSize > 1) ? true : false;
       var currentGrid = rowSize !== 4 ? self.grid : self.priorityGrid;
 
       // setup
@@ -164,7 +175,7 @@
         self.moveItem(val, rowSize);
       });
 
-      var resize = debounce(self.init.bind(this), 400);
+      var resize = debounce(self.init.bind(this), 350);
 
       if (self.firstResize) {
         window.addEventListener('resize', resize);
