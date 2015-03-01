@@ -4,10 +4,7 @@
 
 (function ($) {
 
-  // ---------------------- ---------
-  // underscore debounce
-  // --------------------------------
-
+  /** Debounce function taken from underscore */
   function debounce(func, wait, immediate) {
   	var timeout;
   	return function() {
@@ -27,6 +24,12 @@
   	};
   }
 
+  /**
+   * Represents the grid system
+   * @constructor
+   *
+   * @param {object} settings - configuration options for the grid
+   */
   var FlexyGrid = function FlexyGrid(settings) {
     // Settings
     this.container = settings.container; // grid element
@@ -49,10 +52,12 @@
 
   FlexyGrid.prototype = {
 
+
     /**
-    *	returns the number of boxes that can fit into a row
-    * at the current browser/parent width
-    */
+     *  Sets up the initial state of the grid matrix - a bunch
+     *  of columns and rows of zeroes, matching the current rowsize
+     *  @function
+     */
 
     stateInit: function(rowSize) {
       var arr = [];
@@ -67,10 +72,23 @@
       return arr;
     },
 
+    /**
+     *  Helper function that determines the size of the row, divides the
+     *  container size by the size of a item
+     *  @function
+     */
     getRowSize: function() {
       var containerWidth = Math.floor(parseInt($(this.container).css('width'))/this.width);
       return containerWidth < 1 ? 1 : containerWidth;
     },
+
+    /**
+     *  Takes an individual item and places it in the grid. Goes through the state
+     *  and finds an open spot that matches the items specified dimensions. Then
+     *  it marks the state with 1s to signify the position is occupied, and moves
+     *  the box to where it should be.
+     *  @function
+     */
 
     moveItem: function(item) {
       var self = this;
@@ -109,6 +127,14 @@
         }
       }
 
+      /**
+       *  Helper function that checks to see if the current row has space for the box.
+       *  Returns whether the row passes, and if it did what is the earliest suitable
+       *  position.
+       *
+       *  @param {array} row - the current row in the state matrix
+       *  @function
+       */
       function checkRow(row) {
         for (var j = 0; j < row.length; j++) {
           // check fail states!
@@ -140,6 +166,15 @@
         };
       }
 
+      /**
+       *  Run if the checkRow passes, this checks if the vertical spacing works
+       *  starting from the position that checkRow provided.
+       *
+       *  @param {number} colPos - the starting index in the row where there is open space
+       *  @param {array} startRow - the starting row where there is open space
+       *  @function
+       */
+
       function checkCols(colPos, startRow) {
         for (var k = 0; k < columns; k++) {
           if ($.inArray(1, self.state[startRow + k].slice(colPos, colPos + rowNum)) !== -1 ) {
@@ -151,6 +186,14 @@
         return true;
       }
 
+      /**
+       *  Run when both horizontal(checkRow) and vertical(checkCols) test passes. This runs
+       *  through the matrix to mark the spot as occupied.
+       *
+       *  @param {number} colPos - the starting index in the row where there is open space
+       *  @param {array} startRow - the starting row where there is open space
+       *  @function
+       */
       function markState(colPos, startRow) {
         for (var ii = 0; ii < columns; ii++) {
           for (var jj = 0; jj < rowNum; jj++) {
@@ -160,6 +203,15 @@
       }
     },
 
+
+    /**
+     *  Initial setup of FlexyGrid - this initiailzes the state matrix,
+     *  choses to use either the prioritized grid or the non, and then
+     *  sets up the resize event.
+     *
+     *  @param {boolean} firstResize - checks if a resize handler has been added yet
+     *  @function
+     */
     init: function(firstResize) {
       //var initLoadDone = false;
       var self = this;
