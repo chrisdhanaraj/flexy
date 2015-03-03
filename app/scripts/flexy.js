@@ -159,10 +159,8 @@
      *  @param {array} startRow - the starting row where there is open space
      */
     checkCols: function checkCols(colPos, startRow, columns, rowNum) {
-      var flexyContext = this;
-
       for (var k = 0; k < columns; k++) {
-        if ($.inArray(1, flexyContext.state[startRow + k].slice(colPos, colPos + rowNum)) !== -1 ) {
+        if ($.inArray(1, this.state[startRow + k].slice(colPos, colPos + rowNum)) !== -1 ) {
           // console.log('height');
           return false;
         }
@@ -181,29 +179,28 @@
      */
 
     moveItem: function moveItem(item) {
-      var flexyContext = this;
-      var rowNum = (flexyContext.mobile) ? parseInt($(item).data('row')) : 1;
+      var rowNum = (this.mobile) ? parseInt($(item).data('row')) : 1;
       var columns = parseInt($(item).data('col'));
 
       var checkBrowserSupport = Modernizr.csstransforms;
       if (checkBrowserSupport) {}
 
       // checks column
-      for (var currentRow = 0; currentRow < flexyContext.state.length; currentRow++) {
-        var horzResult = flexyContext.checkRow(flexyContext.state[currentRow], rowNum);
+      for (var currentRow = 0; currentRow < this.state.length; currentRow++) {
+        var horzResult = this.checkRow(this.state[currentRow], rowNum);
 
         // check if we need more rows
         // if so, add rows
-        if (currentRow + rowNum >= flexyContext.state.length) {
-          var counter = currentRow + rowNum - flexyContext.state.length;
-          flexyContext.stateMatrix.addRows(counter);
+        if (currentRow + rowNum >= this.state.length) {
+          var counter = currentRow + rowNum - this.state.length;
+          this.stateMatrix.addRows(counter);
         }
 
         // if both tests pass
-        if (horzResult.pass && flexyContext.checkCols(horzResult.col, currentRow, columns, rowNum)) {
-          flexyContext.stateMatrix.markFilled(horzResult.col, currentRow, columns, rowNum);
+        if (horzResult.pass && this.checkCols(horzResult.col, currentRow, columns, rowNum)) {
+          this.stateMatrix.markFilled(horzResult.col, currentRow, columns, rowNum);
 
-          if (flexyContext.mobile) {
+          if (this.mobile) {
             $(item).css({
               'left': this.width * horzResult.col + 'px',
               'top': this.height * currentRow + 'px',
@@ -236,9 +233,8 @@
     init: function init() {
       console.log('hi, an init has occured');
       // bind this to context
-      var flexyContext = this;
-      var rowSize = flexyContext.getRowSize();
-      flexyContext.mobile = (rowSize > 1) ? true : false;
+      var rowSize = this.getRowSize();
+      this.mobile = (rowSize > 1) ? true : false;
 
       // grid options
       var grid = $(this.container).find(this.box); // unsorted grid
@@ -254,15 +250,15 @@
       // setup state
       this.stateMatrix = new StateMatrix(rowSize);
       this.stateMatrix.createState();
-      flexyContext.state = this.stateMatrix.state;
+      this.state = this.stateMatrix.state;
 
 
-      $.each(currentGrid, function (i, val) {
-        flexyContext.moveItem(val, rowSize);
-      });
+      $.each(currentGrid, $.proxy(function (i, val) {
+        this.moveItem(val, rowSize);
+      }, this) );
 
       if (!FlexyGrid.checkIfResized) {
-        var resize = debounce(flexyContext.init.bind(flexyContext), 300);
+        var resize = debounce(this.init.bind(this), 300);
         window.addEventListener('resize', resize);
         FlexyGrid.checkIfResized = true;
       }
