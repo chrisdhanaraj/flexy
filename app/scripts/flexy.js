@@ -39,7 +39,7 @@
      *  of columns and rows of zeroes, matching the current rowsize
      */
 
-    createState: function setup() {
+    createState: function() {
       var LARGENUMBER = 20; // large number initial number, expanded if needed
       this.state = []; // reset
       for (var i = 0; i < LARGENUMBER; i++) {
@@ -61,7 +61,7 @@
      *  @param {array} startRow - the starting row where there is open space
      */
 
-    markFilled: function markFilled(colPos, startRow, columns, rowNum) {
+    markFilled: function(colPos, startRow, columns, rowNum) {
       for (var i = 0; i < columns; i++) {
         for (var j = 0; j < rowNum; j++) {
           this.state[startRow + i][colPos + j] = 1;
@@ -69,7 +69,7 @@
       }
     },
 
-    addRows: function addRows(numberOfRows) {
+    addRows: function(numberOfRows) {
       var newRow = [];
       for (var i = 0; i < this.rowSize; i++) {
         newRow.push(0);
@@ -90,10 +90,11 @@
    */
   var FlexyGrid = function FlexyGrid(settings) {
     // Settings
-    this.container = settings.container; // grid element
+    this.container = settings.container; // grid class
+    this.centering = settings.centering; // centering class
     this.width = settings.width; // box width
     this.height = settings.height; // box height
-    this.box = settings.box; // box element
+    this.box = settings.box; // box class
 
     // One Column state - aliased to mobile
     this.mobile = false;
@@ -108,7 +109,7 @@
      *  Helper function that determines the size of the row, divides the
      *  container size by the size of a item
      */
-    getRowSize: function getRowSize() {
+    getRowSize: function() {
       var containerWidth = Math.floor(parseInt($(this.container).css('width'))/this.width);
       return containerWidth < 1 ? 1 : containerWidth;
     },
@@ -120,7 +121,7 @@
      *
      *  @param {array} row - the current row in the state matrix
      */
-    checkRow: function checkRow(row, rowNum) {
+    checkRow: function(row, rowNum) {
       for (var j = 0; j < row.length; j++) {
         // check fail states!
 
@@ -158,7 +159,7 @@
      *  @param {number} colPos - the starting index in the row where there is open space
      *  @param {array} startRow - the starting row where there is open space
      */
-    checkCols: function checkCols(colPos, startRow, columns, rowNum) {
+    checkCols: function(colPos, startRow, columns, rowNum) {
       for (var k = 0; k < columns; k++) {
         if ($.inArray(1, this.state[startRow + k].slice(colPos, colPos + rowNum)) !== -1 ) {
           // console.log('height');
@@ -178,8 +179,8 @@
      *  @function
      */
 
-    moveItem: function moveItem(item) {
-      var rowNum = (this.mobile) ? parseInt($(item).data('row')) : 1;
+    moveItem: function(item) {
+      var rowNum = (!this.mobile) ? parseInt($(item).data('row')) : 1;
       var columns = parseInt($(item).data('col'));
 
       var checkBrowserSupport = Modernizr.csstransforms;
@@ -200,7 +201,7 @@
         if (horzResult.pass && this.checkCols(horzResult.col, currentRow, columns, rowNum)) {
           this.stateMatrix.markFilled(horzResult.col, currentRow, columns, rowNum);
 
-          if (this.mobile) {
+          if (!this.mobile) {
             $(item).css({
               'left': this.width * horzResult.col + 'px',
               'top': this.height * currentRow + 'px',
@@ -222,6 +223,10 @@
       }
     },
 
+    center: function() {
+
+    },
+
 
     /**
      *  Initial setup of FlexyGrid - this initiailzes the state matrix,
@@ -230,11 +235,11 @@
      *
      *  @param {boolean} firstResize - checks if a resize handler has been added yet
      */
-    init: function init() {
+    init: function() {
       console.log('hi, an init has occured');
       // bind this to context
       var rowSize = this.getRowSize();
-      this.mobile = (rowSize > 1) ? true : false;
+      this.mobile = (rowSize > 1) ? false : true;
 
       // grid options
       var grid = $(this.container).find(this.box); // unsorted grid
@@ -252,6 +257,11 @@
       this.stateMatrix.createState();
       this.state = this.stateMatrix.state;
 
+      if (this.mobile) {
+        $(this.container).find(this.centering).css('width', '100%');
+      } else {
+        $(this.container).find(this.centering).css('width', rowSize * this.width);
+      }
 
       $.each(currentGrid, $.proxy(function (i, val) {
         this.moveItem(val, rowSize);
@@ -269,6 +279,7 @@
     var settings = $.extend({
       container: this,
       box: '.flexy__box',
+      centering: '.flexy__centering',
       width: 300,
       height: 300
     }, config);
