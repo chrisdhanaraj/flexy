@@ -5,6 +5,7 @@ var $ = require('gulp-load-plugins')();
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
+
 gulp.task('styles', function () {
   return gulp.src('app/styles/main.scss')
     .pipe($.sourcemaps.init())
@@ -34,7 +35,7 @@ gulp.task('html', ['styles'], function () {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('serve', ['styles'], function() {
+gulp.task('serve', ['styles', 'scripts'], function() {
   browserSync({
     notify: false,
     server: {
