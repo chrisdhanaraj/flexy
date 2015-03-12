@@ -35,7 +35,7 @@ gulp.task('html', ['styles'], function () {
     .pipe(gulp.dest('dist'));
 });
 
-gulp.task('serve', ['styles', 'scripts'], function() {
+gulp.task('serve', ['styles'], function() {
   browserSync({
     notify: false,
     server: {
