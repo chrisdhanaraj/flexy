@@ -1,6 +1,6 @@
 # Flexy
 
-Renamed from flex-grid because I liked flexy.
+Renamed from flex-grid because I liked flexy. Checkout the **prototype** branch to checkout some of the upgrades coming to the grid.
 
 ## What is it
 
