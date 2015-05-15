@@ -8,7 +8,7 @@ Kind of a fun diversion (but used for work) and an excuse to play with lodash. I
 
 I built it using the <picture> element comprising a lot of the core boxes (with Scott Jehl's [picturefill](https://github.com/scottjehl/picturefill) to provide browser compat), but there are boxes that don't use an image and are just a plain ole' box as well
 
-An example can be seen at [chrisdhanaraj.github.io/flexy](chrisdhanaraj.github.io/flexy).
+An example can be seen at [chrisdhanaraj.github.io/flexy](https://chrisdhanaraj.github.io/flexy).
 
 ## How to use
 
